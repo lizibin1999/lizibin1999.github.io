@@ -1,0 +1,15 @@
+#aside_content .card-widget {
+    background: blue !important;
+}
+
+#aside_content .card-info .card-info-data > .card-info-data-item a .headline {
+    color: #fffaf8 !important;
+}
+
+#aside_content .card-info .card-info-data > .card-info-data-item a .length_num {
+    color: #fff !important;
+}
+
+body {
+    color: #3dd5d5 !important;
+}

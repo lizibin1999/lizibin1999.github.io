@@ -1,0 +1,284 @@
+<link rel="stylesheet" href="APlayer.min.css"/><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async="async"></script><!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vue基础（四）-Vue前端交互 | Mr li's Blog</title><meta name="description" content="Promise用法Promise概述Promise是异步编程的一种解决方案，从语法上讲，Promise是一个对象，从它可以获取异步操作的消息。使用Promise主要有以下好处:  可以避免多层异步调用嵌套问题(回调地狱) Promise对象提供了简洁的API，使得控制异步操作更加容易   Promise基本用法1234567891011121314151617181920212223242526&amp;"><meta name="keywords" content="Vue前端交互"><meta name="author" content="李小彬"><meta name="copyright" content="李小彬"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/lizibin1999.github.io/img/fav.ico"><link rel="canonical" href="https://github.com/lizibin1999/lizibin1999.github.io.git/article/215bb16f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta name="360-site-verification" content="{&quot;theme_color&quot;:{&quot;enable&quot;:true,&quot;main&quot;:&quot;#e58a8a&quot;,&quot;paginator&quot;:&quot;#00c4b6&quot;,&quot;button_hover&quot;:&quot;#e58a8a&quot;,&quot;text_selection&quot;:&quot;#00c4b6&quot;,&quot;link_color&quot;:&quot;#99a9bf&quot;,&quot;meta_color&quot;:&quot;#99a9bf&quot;,&quot;hr_color&quot;:&quot;#e58a8a&quot;,&quot;code_foreground&quot;:&quot;#F47466&quot;,&quot;code_background&quot;:&quot;rgba(27, 31, 35, .05)&quot;,&quot;toc_color&quot;:&quot;#00c4b6&quot;,&quot;blockquote_padding_color&quot;:&quot;#e58a8a&quot;,&quot;blockquote_background_color&quot;:&quot;#49b1f5&quot;}}"/><meta property="og:type" content="article"><meta property="og:title" content="Vue基础（四）-Vue前端交互"><meta property="og:url" content="https://github.com/lizibin1999/lizibin1999.github.io.git/article/215bb16f.html"><meta property="og:site_name" content="Mr li's Blog"><meta property="og:description" content="Promise用法Promise概述Promise是异步编程的一种解决方案，从语法上讲，Promise是一个对象，从它可以获取异步操作的消息。使用Promise主要有以下好处:  可以避免多层异步调用嵌套问题(回调地狱) Promise对象提供了简洁的API，使得控制异步操作更加容易   Promise基本用法1234567891011121314151617181920212223242526&amp;"><meta property="og:image" content="https://gitee.com/lizibin1999/img/raw/master/imgs/20210222205510.png"><meta property="article:published_time" content="2020-08-27T09:36:29.000Z"><meta property="article:modified_time" content="2021-02-22T12:56:26.988Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/lizibin1999.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="prev" title="webpack" href="https://github.com/lizibin1999/lizibin1999.github.io.git/article/b9f20a20.html"><link rel="next" title="英语四级考前突击大法" href="https://github.com/lizibin1999/lizibin1999.github.io.git/article/4a9b2b87.html"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?753f9f44ea9200ca11e48efc79a9e445";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/lizibin1999.github.io/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true
+  }</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><link rel="stylesheet" href="APlayer.min.css"><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/gh/radium-bit/res@master/live2d/autoload.js" async></script><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async></script><link rel="stylesheet" href="//at.alicdn.com/t/font_2390539_f722btmhweo.css"><link rel="stylesheet" href="/css/customize"><link rel="stylesheet" href="https://blog.lete114.top/css/Lete.css"><meta name="generator" content="Hexo 4.2.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gitee.com/lizibin1999/img/raw/master/imgs/20210227114640.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/lizibin1999.github.io/archives/"><div class="headline">文章</div><div class="length_num">29</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/lizibin1999.github.io/tags/"><div class="headline">标签</div><div class="length_num">24</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/lizibin1999.github.io/categories/"><div class="headline">分类</div><div class="length_num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/archives/"><i class="fa-fw fa fa-bars"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类目录</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="https://gitee.com/lizibin1999/" target="_blank" rel="noopener"><span> Gitee</span></a></li><li><a class="site-page" href="https://imgchr.com/" target="_blank" rel="noopener"><span> 图床</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/photos/"><i class="fa-fw fas fa-camera"></i><span> 图片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/about/"><i class="fa-fw fas fa-window-restore"></i><span> 个人简介</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Promise用法"><span class="toc-number">1.</span> <span class="toc-text">Promise用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise概述"><span class="toc-number">1.1.</span> <span class="toc-text">Promise概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise基本用法"><span class="toc-number">1.2.</span> <span class="toc-text">Promise基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Promise常用的API"><span class="toc-number">1.3.</span> <span class="toc-text">Promise常用的API</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#fetch-api"><span class="toc-number">2.</span> <span class="toc-text">fetch api</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本特性"><span class="toc-number">2.1.</span> <span class="toc-text">基本特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本用法"><span class="toc-number">2.2.</span> <span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fetch请求参数"><span class="toc-number">2.3.</span> <span class="toc-text">fetch请求参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fetch响应结果"><span class="toc-number">2.4.</span> <span class="toc-text">fetch响应结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#axios-API"><span class="toc-number">3.</span> <span class="toc-text">axios API</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#axios基本特性"><span class="toc-number">3.1.</span> <span class="toc-text">axios基本特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios-基本用法"><span class="toc-number">3.2.</span> <span class="toc-text">axios 基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios-常用api"><span class="toc-number">3.3.</span> <span class="toc-text">axios 常用api</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios的响应结果"><span class="toc-number">3.4.</span> <span class="toc-text">axios的响应结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios全局配置"><span class="toc-number">3.5.</span> <span class="toc-text">axios全局配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#axios拦截器"><span class="toc-number">3.6.</span> <span class="toc-text">axios拦截器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#async-await"><span class="toc-number">3.7.</span> <span class="toc-text">async&#x2F;await</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://gitee.com/lizibin1999/img/raw/master/imgs/20210222205510.png)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/lizibin1999.github.io/">Mr li's Blog</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/archives/"><i class="fa-fw fa fa-bars"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类目录</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="https://gitee.com/lizibin1999/" target="_blank" rel="noopener"><span> Gitee</span></a></li><li><a class="site-page" href="https://imgchr.com/" target="_blank" rel="noopener"><span> 图床</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/lizibin1999.github.io/photos/"><i class="fa-fw fas fa-camera"></i><span> 图片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/lizibin1999.github.io/about/"><i class="fa-fw fas fa-window-restore"></i><span> 个人简介</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Vue基础（四）-Vue前端交互</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2020-08-27 17:36:29"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2020-08-27</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2021-02-22 20:56:26"><i class="fas fa-history fa-fw"></i> 更新于 2021-02-22</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/lizibin1999.github.io/categories/Vue/">Vue</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta__icon"></i><span>字数总计:</span><span class="word-count">1.2k</span><span class="post-meta__separator">|</span><i class="far fa-clock fa-fw post-meta__icon"></i><span>阅读时长: 5 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="Promise用法"><a href="#Promise用法" class="headerlink" title="Promise用法"></a>Promise用法</h1><h2 id="Promise概述"><a href="#Promise概述" class="headerlink" title="Promise概述"></a>Promise概述</h2><p>Promise是异步编程的一种解决方案，从语法上讲，Promise是一个对象，从它可以获取异步操作的消息。<br>使用Promise主要有以下好处:</p>
+<ul>
+<li>可以避免多层异步调用嵌套问题(回调地狱)</li>
+<li>Promise对象提供了简洁的API，使得控制异步操作更加容易</li>
+</ul>
+<hr>
+<h2 id="Promise基本用法"><a href="#Promise基本用法" class="headerlink" title="Promise基本用法"></a>Promise基本用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    Promise基本使用</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="comment">// console.log(typeof Promise)</span></span><br><span class="line">  <span class="comment">// console.dir(Promise);</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 这里用于实现异步任务</span></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">var</span> flag = <span class="literal">false</span>;</span><br><span class="line">      <span class="keyword">if</span>(flag) &#123;</span><br><span class="line">        <span class="comment">// 正常情况</span></span><br><span class="line">        resolve(<span class="string">'hello'</span>);</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 异常情况</span></span><br><span class="line">        reject(<span class="string">'出错了'</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, <span class="number">100</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  p.then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data)</span><br><span class="line">  &#125;,<span class="function"><span class="keyword">function</span>(<span class="params">info</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(info)</span><br><span class="line">  &#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Promise常用的API"><a href="#Promise常用的API" class="headerlink" title="Promise常用的API"></a>Promise常用的API</h2><p>1.实例方法<br>p.then()得到异步任务的正确结果<br>p.catch()获取异常信息<br>p.finally()成功与否都会执行(尚且不是正式标准)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">queryData ()</span><br><span class="line">.then ( <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log (data) ;</span><br><span class="line">&#125;)</span><br><span class="line">.catch (<span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data) ;</span><br><span class="line">&#125;)</span><br><span class="line">.finally(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log ( <span class="string">'finished'</span> ) ;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>2.对象方法<br>Promise.all()并发处理多个异步任务，所有任务都执行完成才能得到结果<br>Promise.race()并发处理多个异步任务，只要有一个任务完成就能得到结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.all([p1,p2,p3]).then ( <span class="function">(<span class="params">result</span>)=&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log (result)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.race( [p1,p2,p3]).then ( (result)=→&gt;&#123;</span><br><span class="line">  <span class="built_in">console</span>.log (result)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="fetch-api"><a href="#fetch-api" class="headerlink" title="fetch api"></a>fetch api</h1><h2 id="基本特性"><a href="#基本特性" class="headerlink" title="基本特性"></a>基本特性</h2><p>更加简单的数据获取方式，功能更强大、更灵活，可以看做是xhr的升级版<br>基于Promise实现</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'http://localhost:3000/a'</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//text()方法属于fetchAPI的一部分，返回一个promise实例对象，用于接收后台返回的数据</span></span><br><span class="line">  <span class="keyword">return</span> data.text();</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="fetch请求参数"><a href="#fetch请求参数" class="headerlink" title="fetch请求参数"></a>fetch请求参数</h2><ol>
+<li>Get和delete方式是一样的，传统的url采用url?id=1的方式</li>
+</ol>
+<ul>
+<li>传统的url传参，服务器端用req.query.id接收</li>
+<li>restful格式的url传参，服务器用req.params.id接收<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//restful形式的url</span></span><br><span class="line">fetch(<span class="string">'http://localhost:3000/user/123'</span>,&#123;</span><br><span class="line">  method: <span class="string">'delete'</span><span class="comment">//或者get</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> data.text();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">ret</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">//这里才是得到的数据</span></span><br><span class="line">  <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li>post请求方式的参数传递</li>
+</ol>
+<ul>
+<li>服务器端用中间件body-parser接收</li>
+<li>req.body.uname</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//restful形式的url</span></span><br><span class="line">fetch(<span class="string">'http://localhost:3000/user'</span>,&#123;</span><br><span class="line">  method: <span class="string">'post'</span>,</span><br><span class="line">  body: <span class="string">'uname=list&amp;pwd=123'</span>,<span class="comment">//传递数据</span></span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="string">'Content-Type'</span>: <span class="string">'application/x-www-form-urlencoded'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> data.text();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">ret</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">//这里才是得到的数据</span></span><br><span class="line">  <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<ol start="3">
+<li>post请求方式传递json数据</li>
+</ol>
+<ul>
+<li><p>app.use(bodyParser.json());//提供服务器端接收json的支持</p>
+</li>
+<li><p>app.use(bodyParser.urlencoded({ extended: false }));</p>
+</li>
+<li><p>服务器端用中间件body-parser接收</p>
+</li>
+<li><p>req.body.uname</p>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//restful形式的url</span></span><br><span class="line">fetch(<span class="string">'http://localhost:3000/user'</span>,&#123;</span><br><span class="line">  method: <span class="string">'post'</span>,</span><br><span class="line">  body: <span class="built_in">JSON</span>.stringify(&#123;</span><br><span class="line">    uname: <span class="string">'张三'</span>,</span><br><span class="line">    pwd: <span class="string">'456'</span></span><br><span class="line">  &#125;)</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> data.text();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">ret</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">//这里才是得到的数据</span></span><br><span class="line">  <span class="built_in">console</span>.log(ret);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>put请求方式的参数传递</li>
+</ol>
+<ul>
+<li>put与post类似也支持json和普通形式</li>
+</ul>
+<h2 id="fetch响应结果"><a href="#fetch响应结果" class="headerlink" title="fetch响应结果"></a>fetch响应结果</h2><ul>
+<li>text() 将返回体处理成字符串类型</li>
+<li>json() 返回结果和JSON.parse(responseText)一样</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/abc'</span>). then(<span class="function"><span class="params">data</span>=&gt;</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> data.json();</span><br><span class="line">&#125;).then(<span class="function"><span class="params">ret</span>=&gt;</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret.uname);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>服务器端：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/abc'</span>,(req,res)=&gt;&#123;</span><br><span class="line">  res.json(&#123;</span><br><span class="line">    uname: <span class="string">'aa'</span>,</span><br><span class="line">    age: <span class="number">189</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="axios-API"><a href="#axios-API" class="headerlink" title="axios API"></a>axios API</h1><h2 id="axios基本特性"><a href="#axios基本特性" class="headerlink" title="axios基本特性"></a>axios基本特性</h2><p>axios(官网: <a href="https://github.com/axios/axios)是一个基于Promise用于浏览器和node.js的HTTP客户端。">https://github.com/axios/axios)是一个基于Promise用于浏览器和node.js的HTTP客户端。</a><br>它具有以下特征:</p>
+<ul>
+<li>支持浏览器和node.js</li>
+<li>支持promise</li>
+<li>能拦截请求和响应</li>
+<li>自动转换JSON数据</li>
+</ul>
+<h2 id="axios-基本用法"><a href="#axios-基本用法" class="headerlink" title="axios 基本用法"></a>axios 基本用法</h2><ul>
+<li>需要因外部js的方式引入<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">'/data'</span>).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret.data)</span><br><span class="line">  <span class="comment">//data属性名称是固定的</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="axios-常用api"><a href="#axios-常用api" class="headerlink" title="axios 常用api"></a>axios 常用api</h2><p>服务器接收方式：</p>
+<ul>
+<li>?id=123   req.query.id</li>
+<li>/123 restful方式  app.get(‘/:id’)    req.params.id</li>
+<li>parmas  req.query.id</li>
+</ul>
+<ol>
+<li>get方式<img src="https://s1.ax1x.com/2020/08/28/dIVpzF.png" alt="dIVpzF.png" border="0" />
+
+
+</li>
+</ol>
+<ol start="2">
+<li>delete方式</li>
+</ol>
+<p><a href="https://imgchr.com/i/dIV3dI" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/08/28/dIV3dI.png" alt="dIV3dI.png" border="0" /></a></p>
+<ol start="3">
+<li>post</li>
+</ol>
+<p>json形式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios.post(<span class="string">'url'</span>,&#123;</span><br><span class="line">  uname: <span class="string">''</span>,</span><br><span class="line">  pwd: <span class="number">456</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret.data);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>另一种：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = <span class="keyword">new</span> URLSearchParams();</span><br><span class="line">params.append( <span class="string">'uname'</span>, <span class="string">'zhangsan'</span>);</span><br><span class="line">params.append( <span class="string">'pwd'</span>,<span class="string">'111'</span>);</span><br><span class="line">axios.post(<span class="string">'http://localhost:3000/axios'</span>, params).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret.data)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>put</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios.put(<span class="string">'url/123'</span>,&#123;</span><br><span class="line">  uname: <span class="string">'张三'</span>,</span><br><span class="line">  pwd: <span class="number">456</span></span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">ret</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(ret.data);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="axios的响应结果"><a href="#axios的响应结果" class="headerlink" title="axios的响应结果"></a>axios的响应结果</h2><ul>
+<li>data :实际响应回来的数据</li>
+<li>headers :响应头信息</li>
+<li>status :响应状态码</li>
+<li>statusText :响应状态信息</li>
+</ul>
+<h2 id="axios全局配置"><a href="#axios全局配置" class="headerlink" title="axios全局配置"></a>axios全局配置</h2><ol>
+<li>axios.defaults.timeout = 3000;//超时时间</li>
+<li>axios.defaults.baseURL = ‘<a href="http://localhost:3000/app&#39;;//默认地址" target="_blank" rel="noopener">http://localhost:3000/app&#39;;//默认地址</a></li>
+<li>axios.defaults.headers[‘mytoken’]= ‘aqwerwqwerqwer2ewrwe23eresdf23’//设置请求头</li>
+</ol>
+<h2 id="axios拦截器"><a href="#axios拦截器" class="headerlink" title="axios拦截器"></a>axios拦截器</h2><p><strong>请求拦截器</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios.interceptors.request.use(<span class="function"><span class="keyword">function</span>(<span class="params">config</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//在请求发出前进行一些信息的设置</span></span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;),<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//错误处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>响应拦截器</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">axios.interceptors.response.use(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//在这里对返回的数据进行处理</span></span><br><span class="line">  <span class="keyword">return</span> res;</span><br><span class="line">&#125;),<span class="function"><span class="keyword">function</span>(<span class="params">err</span>)</span>&#123;</span><br><span class="line">  <span class="comment">//处理响应的错误信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h2><ul>
+<li>async/await是ES7引入的新语法，可以更加方便的进行异步操作</li>
+<li>async关键字用于函数上(async函数的返回值是Promise实例对象)</li>
+<li>await关键字用于async函数当中(await可以得到异步的结果)</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">queryData</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ret = <span class="keyword">await</span> axios.get(<span class="string">'adata'</span>);</span><br><span class="line">  <span class="keyword">return</span> ret.data;</span><br><span class="line">&#125;</span><br><span class="line">queryData().then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">李小彬</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://github.com/lizibin1999/lizibin1999.github.io.git/article/215bb16f.html">https://github.com/lizibin1999/lizibin1999.github.io.git/article/215bb16f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://github.com/lizibin1999/lizibin1999.github.io.git" target="_blank">Mr li's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/lizibin1999.github.io/tags/Vue%E5%89%8D%E7%AB%AF%E4%BA%A4%E4%BA%92/">Vue前端交互</a></div><div class="post_share"><div class="social-share" data-image="https://gitee.com/lizibin1999/img/raw/master/imgs/20210222175329.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><button class="reward-button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="https://s1.ax1x.com/2020/07/30/aKTwu9.jpg" alt="wechat" onclick="window.open('https://s1.ax1x.com/2020/07/30/aKTwu9.jpg')"/><div class="post-qr-code__desc">wechat</div></li><li class="reward-item"><img class="post-qr-code__img" src="https://s1.ax1x.com/2020/07/30/aKTajJ.jpg" alt="alipay" onclick="window.open('https://s1.ax1x.com/2020/07/30/aKTajJ.jpg')"/><div class="post-qr-code__desc">alipay</div></li></ul></div></button></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/lizibin1999.github.io/article/b9f20a20.html"><img class="prev-cover" src="https://gitee.com/lizibin1999/img/raw/master/imgs/20210222205832.png" onerror="onerror=null;src='/lizibin1999.github.io/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">webpack</div></div></a></div><div class="next-post pull-right"><a href="/lizibin1999.github.io/article/4a9b2b87.html"><img class="next-cover" src="https://s1.ax1x.com/2020/08/21/dYIPJ0.png" onerror="onerror=null;src='/lizibin1999.github.io/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">英语四级考前突击大法</div></div></a></div></nav><hr><div id="post-comment"><div class="comment_headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js"></script><script>var requestSetting = function (from,set) {
+  var from = from
+  var setting = set.split(',').filter(function(item){
+  return from.indexOf(item) > -1
+  });
+  setting = setting.length == 0 ? from :setting;
+  return setting
+}
+
+var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
+var requiredFields = requestSetting(['nick','mail'],'nick,mail')
+
+window.valine = new Valine({
+  el:'#vcomment',
+  master:'b9ce627b8e132cc887a5d82c8158052e',
+  friends:'c125aa871930e2a6',
+  appId: '',
+  appKey: '',
+  placeholder: 'Please leave your footprints',
+  avatar: 'monsterid',
+  meta: guestInfo,
+  pageSize: '10',
+  lang: 'en',
+  recordIP: false,
+  serverURLs: '',
+  emojiCDN: '',
+  emojiMaps: "",
+  enableQQ: false,
+  requiredFields: requiredFields,
+  emojiMaps: {
+            "1":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/1.gif",
+            "001":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/001.png",
+            "002":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/002.png",
+            "003":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/003.png",
+            "004":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/004.png",
+            "005":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/005.png",
+            "006":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/006.png",
+            //- 图片过多，我这里就省略了
+            "0103":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/103.jpg",
+            "0104":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/104.jpg",
+            "0105":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/105.jpg",
+            "0106":"https://cdn.jsdelivr.net/gh/lete114/CDN/emoji/106.gif"
+        }
+});</script></div></article></main><footer id="footer" style="background-image: url(https://gitee.com/lizibin1999/img/raw/master/imgs/20210222205510.png)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 李小彬</div><div class="footer_custom_text">欢迎来到我的博客</div><div class="icp"><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener"><img class="icp-icon" src="/lizibin1999.github.io/img/icp.png"/><span>鲁ICP备20030351号-1</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><button id="readmode" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" title="缩小字体"><i class="fas fa-minus"></i></button><button class="translate_chn_to_cht" id="translateLink" title="简繁转换">繁</button><button id="darkmode" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fas fa-comments"></i></a><button class="close" id="mobile-toc-button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/lizibin1999.github.io/js/utils.js"></script><script src="/lizibin1999.github.io/js/main.js"></script><script src="/lizibin1999.github.io/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="/lizibin1999.github.io/js/third-party/click_heart.js"></script><script src="https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js"></script><script>document.addEventListener('DOMContentLoaded', function() {
+  pangu.autoSpacingPage()
+})</script><script src="/lizibin1999.github.io/js/search/local-search.js"></script><script src="https://blog.lete114.top/js/Lete.js"></script><script src="https://cdn.jsdelivr.net/gh/lete114/CDN/Sum/sakura.js"></script><script src="https://cdn.jsdelivr.net/gh/lete114/CDN/Sum/title.js"></script></body></html>
